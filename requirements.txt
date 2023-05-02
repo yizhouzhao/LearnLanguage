@@ -5,3 +5,4 @@ pynput
 mtranslate
 tk
 pyttsx3
+customtkinter
