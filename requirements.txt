@@ -4,3 +4,4 @@ paddleocr
 pynput
 mtranslate
 tk
+pyttsx3

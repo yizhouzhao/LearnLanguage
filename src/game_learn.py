@@ -11,7 +11,7 @@ import random
 class GameLearn():
     def __init__(self, 
             image_path = "./image/screenshot.png", 
-            font_path = "./font/SourceCodePro-Black.ttf",
+            font_path = "./font/AaXingQiuHei-2.ttf",
             source_lang = "french",
             target_lang = "chinese",
             font_size = 40):
@@ -21,9 +21,14 @@ class GameLearn():
         self.source_lang = source_lang
         self.font_size = font_size
 
-        self.ocr = PaddleOCR(use_angle_cls=False, lang=self.source_lang) # need to run only once to download and load model into memory
-        self.source_lang_code = "fr"
-        self.target_lang_code = "zh-CN"
+        self.ocr = PaddleOCR(use_angle_cls=True, lang=self.source_lang) # need to run only once to download and load model into memory
+        if source_lang == "french":
+            self.source_lang_code = "fr"
+        elif source_lang == "japan":
+            self.source_lang_code = "ja"
+        else:
+            self.source_lang_code = "en"    
+        self.target_lang_code = "zh-CN" if target_lang == "chinese" else "en"
 
         print("init complete:", self.image_path)
 
@@ -47,7 +52,7 @@ class GameLearn():
         translated_texts = translation.split("\n")
         return translated_texts
 
-    def draw_ocr(self, result, need_translation = False, need_save = False):
+    def draw_ocr(self, result, need_translation = True, need_save = True):
         """
         Draw ocr
         """
@@ -59,7 +64,8 @@ class GameLearn():
             txts = self.perform_translation(txts)
 
         scores = [line[1][1] for line in result]
-        image_draw = draw_ocr_boxes(image, boxes, txts, scores)
+        image_draw = draw_ocr_boxes(image, boxes, txts, scores,
+                                    font_path=self.font_path)
         image_draw.show()
         if need_save:
             # generating random strings
