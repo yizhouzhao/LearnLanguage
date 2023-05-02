@@ -2,6 +2,5 @@ paddlepaddle
 paddleocr
 # pyautogui
 pynput
-translate
+mtranslate
 tk
-PyMultiDictionary

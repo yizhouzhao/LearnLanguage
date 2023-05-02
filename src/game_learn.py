@@ -1,9 +1,12 @@
 # main class for game translator
 from pynput import keyboard
 from paddleocr import PaddleOCR
-from translate import Translator
+import mtranslate
 
 from .utils import *
+import string
+import random
+ 
 
 class GameLearn():
     def __init__(self, 
@@ -19,8 +22,9 @@ class GameLearn():
         self.font_size = font_size
 
         self.ocr = PaddleOCR(use_angle_cls=False, lang=self.source_lang) # need to run only once to download and load model into memory
-        self.translator = Translator(from_lang='fr', to_lang='zh')
-        
+        self.source_lang_code = "fr"
+        self.target_lang_code = "zh-CN"
+
         print("init complete:", self.image_path)
 
 
@@ -37,15 +41,13 @@ class GameLearn():
 
     def perform_translation(self, txts):
         print("....performing translation....")
-        translation_texts = []
-        for text in txts:
-            translation_text = self.translator.translate(text)
-            translation_texts.append(translation_text)
+        text = "\n".join(txts)
+        translation = mtranslate.translate(text, self.target_lang_code, self.source_lang_code)
         print("....end translation....")
-        
-        return translation_texts
+        translated_texts = translation.split("\n")
+        return translated_texts
 
-    def draw_ocr(self, result, need_translate = True):
+    def draw_ocr(self, result, need_translation = False, need_save = False):
         """
         Draw ocr
         """
@@ -53,12 +55,20 @@ class GameLearn():
         image = Image.open(self.image_path).convert('RGB')
         boxes = [line[0] for line in result]
         txts = [line[1][0] for line in result]
-        if need_translate:
+        if need_translation:
             txts = self.perform_translation(txts)
 
         scores = [line[1][1] for line in result]
         image_draw = draw_ocr_boxes(image, boxes, txts, scores)
         image_draw.show()
+        if need_save:
+            # generating random strings
+            res = ''.join(random.choices(string.ascii_uppercase +
+                                        string.digits, k=6))
+            image_name = f"./image/{res}.png"
+            image_draw.save(image_name)
+
+        return image_draw
 
     ############################## keyboard event ##############################
     def on_press(self, key):   
@@ -67,7 +77,7 @@ class GameLearn():
             # Capture a screenshot
             self.get_screenshot()
             result = self.perform_ocr()
-            self.draw_ocr(result)
+            image = self.draw_ocr(result)
 
         elif key == keyboard.Key.pause:
             exit()

@@ -65,11 +65,11 @@ def draw_ocr_boxes(image,
             box_height = box[2][1] - box[1][1]
             text = txts[i]
 
-            org = (box[1][0] + 10, box[0][1] + box_height)
+            org = (box[1][0] + 10, box[0][1] + box_height // 2 - 20)
             print("org:", org, "text:", text)
-            d.text(org, text, font=fnt, fill=(150, 10, 80, 255))
+            d.text(org, text, font=fnt, fill=(200, 10, 80, 255))
 
-        txt_image.show()
+        # txt_image.show()
         base = Image.alpha_composite(base, txt_image)
 
     return base
