@@ -2,3 +2,5 @@ paddlepaddle
 paddleocr
 # pyautogui
 pynput
+translate
+tk
