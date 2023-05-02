@@ -4,3 +4,4 @@ paddleocr
 pynput
 translate
 tk
+PyMultiDictionary

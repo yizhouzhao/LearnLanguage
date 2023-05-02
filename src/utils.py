@@ -1,4 +1,4 @@
-from PIL import ImageGrab, Image
+from PIL import ImageGrab, Image, ImageFont, ImageDraw
 import numpy as np
 import math
 import cv2
@@ -38,7 +38,7 @@ def draw_ocr_boxes(image,
         font = cv2.FONT_HERSHEY_SIMPLEX # font
         fontScale = font_scale # fontScale
         color = (255, 0, 0)  # Blue color in BGR
-        thickness = 5 # Line thickness of 2 px
+        thickness = 2 # Line thickness of 2 px
         
     
     box_num = len(boxes)
@@ -48,13 +48,30 @@ def draw_ocr_boxes(image,
             continue
         box = np.reshape(np.array(boxes[i]), [-1, 1, 2]).astype(np.int64)
         image = cv2.polylines(np.array(image), [box], True, (255, 0, 0), 2)
-        if draw_text:
-            text = txts[i]
-            # Using cv2.putText() method
-            org = (box[1][0][0] + 10, box[0][0][1] + 10)
-            image = cv2.putText(image, text, org, font, 
-                            fontScale, color, thickness, cv2.LINE_AA)
 
-    return image
+    base = Image.fromarray(image).convert("RGBA")
+    if draw_text:
+        fnt = ImageFont.truetype(font_path, 40)
+        # make a blank image for the text, initialized to transparent text color
+        txt_image = Image.new("RGBA", base.size, (255, 255, 255, 0))
+        # get a drawing context
+        d = ImageDraw.Draw(txt_image)
+        for i in range(box_num):
+            if scores is not None and (scores[i] < drop_score or
+                                   math.isnan(scores[i])):
+                continue
+            box = boxes[i]
+            box_width = box[1][0] - box[0][0]
+            box_height = box[2][1] - box[1][1]
+            text = txts[i]
+
+            org = (box[1][0] + 10, box[0][1] + box_height)
+            print("org:", org, "text:", text)
+            d.text(org, text, font=fnt, fill=(150, 10, 80, 255))
+
+        txt_image.show()
+        base = Image.alpha_composite(base, txt_image)
+
+    return base
 
 
