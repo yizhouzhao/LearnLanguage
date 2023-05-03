@@ -8,7 +8,7 @@ import string
 import random
  
 
-class GameLearn():
+class Learner():
     def __init__(self, 
             image_path = "./image/screenshot.png", 
             font_path = "./font/AaXingQiuHei-2.ttf",

@@ -3,6 +3,12 @@ import numpy as np
 import math
 import cv2
 
+def get_screen_size():
+    """
+    Get screen size
+    """
+    return ImageGrab.grab().size
+
 # Define a function to capture a screenshot
 def capture_screenshot(save_path = './image/screenshot.png'):
     # Capture the screen and save it to a file
