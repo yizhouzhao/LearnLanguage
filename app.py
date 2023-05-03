@@ -5,16 +5,61 @@ from src.utils import get_screen_size
 
 class LearnApp:
     def __init__(self):
-        # start ui
-        self.ui = AppUI(window_size=get_screen_size())
-        self.ui.after(0, lambda:self.ui.state('zoomed'))
-        self.ui.mainloop()
+        # properties
+        self.is_loading = True
 
         # start learner
         self.learner = Learner(
             source_lang="french",
             target_lang="chinese"
         )
+
+        # add listener
+        listener = keyboard.Listener(
+            on_release=self.on_release
+        )
+        listener.start()
+    
+
+        # start ui
+        self.ui = AppUI(window_size=get_screen_size())
+        self.ui.after(0, lambda:self.ui.state('zoomed'))
+        self.ui.lift()
+        # self.ui.attributes("-topmost", True)
+        # self.ui.after(1, lambda:self.ui.lift())
+        # start loop
+        self.is_loading = False
+        self.ui.mainloop()
+
+    def on_release(self, key):
+        print("key pressed", key)
+        if not self.is_loading:
+            if key == keyboard.Key.print_screen:
+                self.is_loading = True
+                
+                # Capture a screenshot
+                self.learner.get_screenshot()
+                self.ui.update_image(self.learner.image_path)
+                self.ui.open_loading()
+
+                # Perform OCR
+                result = self.learner.perform_ocr()
+                image, image_path = self.learner.draw_ocr(result)
+
+                # Update image
+                self.ui.update_image(image_path)
+                self.ui.loading_window.destroy()
+                self.ui.loading_window = None
+                self.ui.lift()
+
+
+            elif key == keyboard.Key.pause:
+                exit()
+            
+            # unblock
+            self.is_loading = False
+
+
 
 
 if __name__ == "__main__":
@@ -23,7 +68,8 @@ if __name__ == "__main__":
     #     source_lang="french",
     #     target_lang="chinese"
     # )
-    # # Start listening for key events
+    # Start listening for key events
     # with keyboard.Listener(on_press=game_learn.on_press) as listener:
     #     listener.join()
     app = LearnApp()
+    

@@ -66,15 +66,17 @@ class Learner():
         scores = [line[1][1] for line in result]
         image_draw = draw_ocr_boxes(image, boxes, txts, scores,
                                     font_path=self.font_path)
-        image_draw.show()
+        # image_draw.show()
         if need_save:
             # generating random strings
             res = ''.join(random.choices(string.ascii_uppercase +
                                         string.digits, k=6))
-            image_name = f"./image/{res}.png"
-            image_draw.save(image_name)
+            image_path = f"./image/{res}.png"
+            image_draw.save(image_path)
+            return image_draw, image_path
 
-        return image_draw
+        else:
+            return image_draw, None
 
     ############################## keyboard event ##############################
     def on_press(self, key):   

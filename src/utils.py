@@ -10,12 +10,15 @@ def get_screen_size():
     return ImageGrab.grab().size
 
 # Define a function to capture a screenshot
-def capture_screenshot(save_path = './image/screenshot.png'):
+def capture_screenshot(save_path = './image/screenshot.png', save_image = True):
     # Capture the screen and save it to a file
     im = ImageGrab.grab()
     print("Captured screenshot")
-    im.show()
-    im.save(save_path)
+    # im.show()
+    if save_image:
+        im.save(save_path)
+
+    return im
 
 def draw_ocr_boxes(image,
              boxes,
@@ -23,7 +26,7 @@ def draw_ocr_boxes(image,
              scores=None,
              drop_score=0.5,
              font_path="./doc/fonts/simfang.ttf",
-             font_scale=1):
+             font_scale=1.5):
     """
     Visualize the results of OCR detection and recognition
     args:

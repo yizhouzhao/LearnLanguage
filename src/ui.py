@@ -4,7 +4,7 @@ import customtkinter
 import os
 from PIL import Image
 
-from .note import NoteWindow
+from .widget import NoteWindow, LoadingWindow
 
 
 class AppUI(customtkinter.CTk):
@@ -19,6 +19,7 @@ class AppUI(customtkinter.CTk):
         # create menu
         self.create_menu()
         self.note_window = None
+        self.loading_window = None
 
         # create main part
         self.open_image()
@@ -42,6 +43,17 @@ class AppUI(customtkinter.CTk):
             print("creating new window")
         else:
             self.note_window.focus()  # if window exists focus it
+    
+    def open_loading(self):
+        """
+        Open Loading window
+        """
+        if self.loading_window is None or (not self.loading_window.winfo_exists()):
+            self.loading_window = LoadingWindow(self)  # create window if its None or destroyed
+            self.loading_window.after(10, self.loading_window.lift)
+            print("creating loading window")
+            self.loading_window.focus()  # if window exists focus it
+            self.loading_window.lift()
     
     def open_image(self, image_path:str = "./src/ui_image/loading.jpg"):
         
