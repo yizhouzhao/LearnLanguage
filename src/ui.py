@@ -82,8 +82,8 @@ class AppUI(customtkinter.CTk):
         # print("image_path", image_path)
         image = Image.open(image_path)
         # image = image.resize((self.winfo_screenwidth(), self.winfo_screenheight()), Image.Resampling.LANCZOS)
-        main_image = customtkinter.CTkImage(image, size=(self.winfo_screenwidth() * 0.9, self.winfo_screenheight() * 0.9))
-        print("image size", main_image.cget("size"))
+        main_image = customtkinter.CTkImage(image, size=(self.winfo_screenwidth(), self.winfo_screenheight()))
+        print("image size", self.winfo_screenwidth(), self.winfo_screenheight())
 
         # create home frame
         self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -105,6 +105,14 @@ class AppUI(customtkinter.CTk):
         new_image = customtkinter.CTkImage(new_image, size=(self.winfo_screenwidth() * 0.9, self.winfo_screenheight() * 0.9))
     
         self.main_image_label.configure(image = new_image)
+
+    def add_sound_buttons(self):
+        for i in range(5):
+            read_button = customtkinter.CTkButton(master=self.home_frame, width = 20, text= "R", fg_color="#714285",
+                                            command=None
+                        )
+
+            read_button.place(x=20 * i, y=0, anchor="nw")
         
     ################################### functions ###################################
     def change_appearance_mode_event(self, new_appearance_mode):
@@ -115,7 +123,7 @@ class AppUI(customtkinter.CTk):
         update word list from ocr result
         """
         self.word_list = get_words_from_result(result)
-        print("!!!!!!!!!!!!word_list!!!!!!!!!!", self.word_list)
+        # print("!!!!!!!!!!!!word_list!!!!!!!!!!", self.word_list)
 
 
 if __name__ == "__main__":

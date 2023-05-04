@@ -13,6 +13,8 @@ class NoteWindow(customtkinter.CTkToplevel):
 
         self.word_list = []
         self.word_translate_list = []
+        self.text2button = {}
+        
 
         # self.label = customtkinter.CTkLabel(self, text="Word list")
         # self.label.pack()
@@ -35,6 +37,13 @@ class NoteWindow(customtkinter.CTkToplevel):
 
             # self.build_block("Word 1", "Translation 1", 0)
             # self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
+
+    def write_word_to_file(self, word):
+        with open("./data/notes.txt", "a", encoding="utf-8") as f:
+            f.write(f"{word}\n")
+        
+        button = self.text2button[word]
+        button.configure(state="disabled")
         
     def build_block(self, word:str, translation:str, index:int):
         block = customtkinter.CTkFrame(master=self.frame, corner_radius=10, fg_color="transparent") #  
@@ -44,8 +53,12 @@ class NoteWindow(customtkinter.CTkToplevel):
         translation_label = customtkinter.CTkLabel(block, text=translation)
         translation_label.grid(row = 0, column = 1, padx=5)
 
+        write_line = (word + " " + translation + "\n").encode('utf8')
         read_button = customtkinter.CTkButton(master=block, width = 20, text= "+", fg_color="#714285",
-                                         command=None)
+                                         command=lambda : self.write_word_to_file(write_line)
+        )
+        self.text2button[write_line] = read_button
+
         read_button.grid(row = 0, column = 2, padx=2, sticky="e")
         lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "Collins", fg_color="#328afc",
                                          command=lambda : webbrowser.open(f'https://www.collinsdictionary.com/dictionary/{Learner.source_lang}-english/{word}'))
@@ -72,6 +85,6 @@ class LoadingWindow(customtkinter.CTkToplevel):
         self.geometry(f"{widget_size}x{widget_size}")
         image_path:str = "./src/ui_image/loading.png"
         image = customtkinter.CTkImage(Image.open(image_path), size=(widget_size, widget_size))
-        self.label = customtkinter.CTkLabel(self, text= "Analyzing...", image=image)
+        self.label = customtkinter.CTkLabel(self, text= "Loading...", image=image)
         print("loading image size", image.cget("size"))
         self.label.pack(padx=0, pady=0)
