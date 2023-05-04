@@ -6,7 +6,6 @@ from pynput import keyboard
 from paddleocr import PaddleOCR
 from .translate import *
 from .utils import *
-
  
 
 class Learner():
