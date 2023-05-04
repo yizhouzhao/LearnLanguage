@@ -16,6 +16,8 @@ class Learner():
             target_lang = "chinese",
             font_size = 40):
         
+        Learner.source_lang = source_lang
+        Learner.target_lang = target_lang
         self.image_path = image_path
         self.font_path = font_path
         self.source_lang = source_lang

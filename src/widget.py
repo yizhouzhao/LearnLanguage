@@ -2,6 +2,8 @@ import customtkinter
 from PIL import Image
 
 from .translate import translate
+from .game_learn import Learner
+import webbrowser
 
 class NoteWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -22,16 +24,17 @@ class NoteWindow(customtkinter.CTkToplevel):
         if len(word_list) > 0:
             self.word_list = word_list
 
-            # # translate if needed
-            # if len(self.word_translate_list == 0):
-            #     word_all = "\n".join(word_list)
-            #     self.translate_word_list = translate(word_all).split("\n")
+            # translate if needed
+            if len(self.word_translate_list) == 0:
+                word_all = "\n".join(word_list)
+                self.translate_word_list = translate(word_all, Learner.target_lang_code, Learner.source_lang_code).split("\n")
+                assert len(self.translate_word_list) == len(self.word_list), "wrong translation"
 
             for idx, word in enumerate(word_list):
-                self.build_block(word, "translate", idx)
+                self.build_block(word, self.translate_word_list[idx], idx)
 
-            self.build_block("Word 1", "Translation 1", 0)
-            self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
+            # self.build_block("Word 1", "Translation 1", 0)
+            # self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
         
     def build_block(self, word:str, translation:str, index:int):
         block = customtkinter.CTkFrame(master=self.frame, corner_radius=10, fg_color="transparent") #  
@@ -41,15 +44,15 @@ class NoteWindow(customtkinter.CTkToplevel):
         translation_label = customtkinter.CTkLabel(block, text=translation)
         translation_label.grid(row = 0, column = 1, padx=5)
 
-        read_button = customtkinter.CTkButton(master=block, width = 20, text= "R", fg_color="#714285",
+        read_button = customtkinter.CTkButton(master=block, width = 20, text= "+", fg_color="#714285",
                                          command=None)
         read_button.grid(row = 0, column = 2, padx=2, sticky="e")
-        lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "L", fg_color="#3428AA",
-                                         command=None)
+        lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "Collins", fg_color="#328afc",
+                                         command=lambda : webbrowser.open(f'https://www.collinsdictionary.com/dictionary/{Learner.source_lang}-english/{word}'))
         lookup_button.grid(row = 0, column = 3, padx=2, sticky="e")
 
-        add_button = customtkinter.CTkButton(master=block, width = 20, text= "A", fg_color="#AA8822",
-                                         command=None)
+        add_button = customtkinter.CTkButton(master=block, width = 20, text= "Yaodao", fg_color="#991567",
+                                         command=lambda : webbrowser.open(f'https://www.youdao.com/result?word={word}&lang={Learner.source_lang_code}'))
         add_button.grid(row = 0, column = 4, padx=2, sticky="e")
         
         block.grid(sticky = "nw", pady = 3)

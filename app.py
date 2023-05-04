@@ -24,6 +24,7 @@ class LearnApp:
         # start ui
         self.ui = AppUI(window_size=get_screen_size())
         self.ui.after(0, lambda:self.ui.state('zoomed'))
+        # self.ui.attributes('-alpha',0.5)
         self.ui.lift()
         # self.ui.attributes("-topmost", True)
         # self.ui.after(1, lambda:self.ui.lift())
@@ -54,8 +55,7 @@ class LearnApp:
 
                 # Update image
                 self.ui.update_image(image_path)
-                self.ui.loading_window.destroy()
-                self.ui.loading_window = None
+                self.ui.close_loading()
                 self.ui.lift()
 
 

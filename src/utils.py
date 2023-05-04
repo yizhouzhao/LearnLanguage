@@ -84,7 +84,7 @@ def draw_ocr_boxes(image,
 
     return base
 
-def get_words_from_result(result):
+def get_words_from_result(result, filter_length = 3, sort_word = True):
     """
     Get words from results
     """
@@ -93,7 +93,10 @@ def get_words_from_result(result):
     line = " ".join(txts)
     line = re.sub(r"[^A-Za-z]", " ", line.strip())
     words = line.split()
-    words = [word.lower() for word in words]
+    words = set([word.lower() for word in words])
+    words = [word for word in words if len(word) >= filter_length]
+    if sort_word:
+        words.sort()
     return words
 
 

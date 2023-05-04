@@ -43,7 +43,11 @@ class AppUI(customtkinter.CTk):
     def open_wordlist(self):
         if self.wordlist_window is None or (not self.wordlist_window.winfo_exists()):
             self.wordlist_window = NoteWindow(self)  # create window if its None or destroyed
+            # build word list
+            self.open_loading()
             self.wordlist_window.build_word_list(self.word_list)
+            self.close_loading()
+
             self.wordlist_window.after(10, self.wordlist_window.lift)
             print("creating new window")
         else:
@@ -55,10 +59,18 @@ class AppUI(customtkinter.CTk):
         """
         if self.loading_window is None or (not self.loading_window.winfo_exists()):
             self.loading_window = LoadingWindow(self)  # create window if its None or destroyed
-            self.loading_window.after(10, self.loading_window.lift)
+            self.loading_window.after(1, self.loading_window.lift)
             print("creating loading window")
             self.loading_window.focus()  # if window exists focus it
             self.loading_window.lift()
+
+    def close_loading(self):
+        """
+        Close Loading window
+        """
+        if self.loading_window is not None and self.loading_window.winfo_exists():
+            self.loading_window.destroy()
+            self.loading_window = None
     
     def open_image(self, image_path:str = "./src/ui_image/loading.jpg"):
         
