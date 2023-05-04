@@ -1,8 +1,9 @@
 import tkinter as tk
-
 import customtkinter
 import os
 from PIL import Image
+
+import pyttsx3
 
 from .widget import NoteWindow, LoadingWindow
 from .utils import get_words_from_result
@@ -27,6 +28,9 @@ class AppUI(customtkinter.CTk):
 
         # create main part
         self.open_image()
+
+        # init reading engine
+        self.init_reading_engine()
 
     def create_menu(self):
 
@@ -125,7 +129,7 @@ class AppUI(customtkinter.CTk):
         for i in range(len(boxes)):
             box = boxes[i]
             read_button = customtkinter.CTkButton(master=self.home_frame, width = 8, height = 8, text= ' ', # txts[i]
-                                            command=None,
+                                            command=lambda i = i: self.say_sentence(txts[i]), # txts[i]
                                             font = ("Times", 8),
                                             # fg_color="transparent",
                                             # bg_color="transparent",
@@ -139,7 +143,7 @@ class AppUI(customtkinter.CTk):
             # read_button.attributes("-topmost", True)
             
 
-    ################################### functions ###################################
+    ################################### ui functions ###################################
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
@@ -149,6 +153,26 @@ class AppUI(customtkinter.CTk):
         """
         self.word_list = get_words_from_result(result)
         # print("!!!!!!!!!!!!word_list!!!!!!!!!!", self.word_list)
+
+    ################################### reading engine ###################################
+    def init_reading_engine(self):
+        # init reading engine
+        self.engine = pyttsx3.init('sapi5')
+        voices = self.engine.getProperty('voices')
+        from .game_learn import Learner
+        lang_code = Learner.source_lang_code
+        for voice in voices:
+            if lang_code in voice.id.lower():
+                self.engine.setProperty('voice', voice.id)
+                break
+
+    def say_sentence(self, sentence):
+        """
+        Say sentence
+        """
+        print("saying sentence: ", sentence)
+        self.engine.say(sentence)
+        self.engine.runAndWait()
 
 
 if __name__ == "__main__":
