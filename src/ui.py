@@ -80,33 +80,36 @@ class AppUI(customtkinter.CTk):
         # # load images with light and dark mode image
         # image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_images")
         # print("image_path", image_path)
-        image = Image.open(image_path)
-        self.main_image_size = image.size
+        self.main_image = Image.open(image_path)
+        self.main_image_size = self.main_image.size
         # image = image.resize((self.winfo_screenwidth(), self.winfo_screenheight()), Image.Resampling.LANCZOS)
-        main_image = customtkinter.CTkImage(image, size=(self.winfo_screenwidth(), self.winfo_screenheight()))
+        main_ctkimage = customtkinter.CTkImage(self.main_image, size=(self.winfo_screenwidth(), self.winfo_screenheight()))
         print("image size", self.winfo_screenwidth(), self.winfo_screenheight())
 
         # create home frame
         self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         # self.home_frame.grid_columnconfigure(0, weight=1)
 
-        self.main_image_label = customtkinter.CTkLabel(self.home_frame, text="", image=main_image)
+        self.main_image_label = customtkinter.CTkLabel(self.home_frame, text="", image=main_ctkimage)
         self.main_image_label.grid(row=0, column=0, padx=0, pady=0)
 
         # select default frame
         # self.select_frame_by_name("home")
         self.home_frame.pack() #grid(row=0, column=0, sticky="nsew")
 
-    def update_image(self, image_path:str = "./image/screenshot.png"):
+    def update_image(self, image_path:str = "./image/screenshot.png", half_transparent = False):
         """
         update image in main image label
         """
-        new_image = Image.open(image_path)
-        self.main_image_size = new_image.size
+        self.main_image = Image.open(image_path)
+        if half_transparent:
+            self.main_image.putalpha(127)
+
+        self.main_image_size = self.main_image.size
         # new_image = new_image.resize((self.winfo_screenwidth(), self.winfo_screenheight()), Image.Resampling.LANCZOS)
-        new_image = customtkinter.CTkImage(new_image, size=(self.winfo_screenwidth() * 0.9, self.winfo_screenheight() * 0.9))
+        main_ctkimage = customtkinter.CTkImage(self.main_image, size=(self.winfo_screenwidth() * 0.9, self.winfo_screenheight() * 0.9))
     
-        self.main_image_label.configure(image = new_image)
+        self.main_image_label.configure(image = main_ctkimage)
 
     def add_sound_buttons(self, result):
         # clean result
@@ -115,19 +118,23 @@ class AppUI(customtkinter.CTk):
         scores = [line[1][1] for line in result]
         txts = [line[1][0] for line in result]
 
-        scaler_x = self.winfo_screenwidth() / self.main_image_size[0] * 0.9
-        scaler_y = self.winfo_screenheight() / self.main_image_size[1] * 0.9
-        print("scaler", scaler_x, scaler_y, self.main_image_size)
+        # scaler_x = self.winfo_screenwidth() / self.main_image_size[0] * 0.9
+        # scaler_y = self.winfo_screenheight() / self.main_image_size[1] * 0.9
+        # print("scaler", scaler_x, scaler_y, self.main_image_size)
 
         for i in range(len(boxes)):
             box = boxes[i]
-            read_button = customtkinter.CTkButton(master=self.home_frame, width = 20, text= txts[i],
+            read_button = customtkinter.CTkButton(master=self.home_frame, width = 8, height = 8, text= ' ', # txts[i]
                                             command=None,
-                                            fg_color="transparent",
-                                            bg_color="transparent",
+                                            font = ("Times", 8),
+                                            # fg_color="transparent",
+                                            # bg_color="transparent",
                                             )
-            print(i, "box", box, box[0][0] * scaler_x, box[0][1] * scaler_y)
-            read_button.place(x = box[0][0] * scaler_x, y=box[0][1] * scaler_y, anchor="nw")
+            # print(i, "box", box, box[0][0] * scaler_x, box[0][1] * scaler_y)
+            # read_button.place(x = box[0][0] * scaler_x, y=box[0][1] * scaler_y, anchor="nw")
+            read_button.place(relx=box[0][0] / self.main_image_size[0] - 0.01, 
+                              rely=box[0][1] / self.main_image_size[1], 
+                              anchor="nw")
             # read_button.attributes("-alpha", 0.5)
             # read_button.attributes("-topmost", True)
             

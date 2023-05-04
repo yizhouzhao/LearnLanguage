@@ -1,11 +1,12 @@
 # main class for game translator
+import string
+import random
+
 from pynput import keyboard
 from paddleocr import PaddleOCR
 from .translate import *
-
 from .utils import *
-import string
-import random
+
  
 
 class Learner():
