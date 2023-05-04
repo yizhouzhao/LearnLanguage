@@ -81,6 +81,7 @@ class AppUI(customtkinter.CTk):
         # image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_images")
         # print("image_path", image_path)
         image = Image.open(image_path)
+        self.main_image_size = image.size
         # image = image.resize((self.winfo_screenwidth(), self.winfo_screenheight()), Image.Resampling.LANCZOS)
         main_image = customtkinter.CTkImage(image, size=(self.winfo_screenwidth(), self.winfo_screenheight()))
         print("image size", self.winfo_screenwidth(), self.winfo_screenheight())
@@ -101,19 +102,36 @@ class AppUI(customtkinter.CTk):
         update image in main image label
         """
         new_image = Image.open(image_path)
+        self.main_image_size = new_image.size
         # new_image = new_image.resize((self.winfo_screenwidth(), self.winfo_screenheight()), Image.Resampling.LANCZOS)
         new_image = customtkinter.CTkImage(new_image, size=(self.winfo_screenwidth() * 0.9, self.winfo_screenheight() * 0.9))
     
         self.main_image_label.configure(image = new_image)
 
-    def add_sound_buttons(self):
-        for i in range(5):
-            read_button = customtkinter.CTkButton(master=self.home_frame, width = 20, text= "R", fg_color="#714285",
-                                            command=None
-                        )
+    def add_sound_buttons(self, result):
+        # clean result
+        result = result[0]
+        boxes = [line[0] for line in result]
+        scores = [line[1][1] for line in result]
+        txts = [line[1][0] for line in result]
 
-            read_button.place(x=20 * i, y=0, anchor="nw")
-        
+        scaler_x = self.winfo_screenwidth() / self.main_image_size[0] * 0.9
+        scaler_y = self.winfo_screenheight() / self.main_image_size[1] * 0.9
+        print("scaler", scaler_x, scaler_y, self.main_image_size)
+
+        for i in range(len(boxes)):
+            box = boxes[i]
+            read_button = customtkinter.CTkButton(master=self.home_frame, width = 20, text= txts[i],
+                                            command=None,
+                                            fg_color="transparent",
+                                            bg_color="transparent",
+                                            )
+            print(i, "box", box, box[0][0] * scaler_x, box[0][1] * scaler_y)
+            read_button.place(x = box[0][0] * scaler_x, y=box[0][1] * scaler_y, anchor="nw")
+            # read_button.attributes("-alpha", 0.5)
+            # read_button.attributes("-topmost", True)
+            
+
     ################################### functions ###################################
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)

@@ -43,21 +43,23 @@ class LearnApp:
                 self.ui.update_image(self.learner.image_path)
                 self.ui.open_loading()
 
+
+                # Perform OCR
+                result = self.learner.perform_ocr()
+
                 # test button
-                self.ui.add_sound_buttons()
+                self.ui.add_sound_buttons(result)
 
-                # # Perform OCR
-                # result = self.learner.perform_ocr()
-                # # update ui word list
-                # self.ui.update_word_list(result)
+                # update ui word list
+                self.ui.update_word_list(result)
 
-                # # Perform translation and draw
-                # image, image_path = self.learner.draw_ocr(result)
+                # Perform translation and draw
+                image, image_path = self.learner.draw_ocr(result)
 
-                # # Update image
-                # self.ui.update_image(image_path)
-                # self.ui.close_loading()
-                # self.ui.lift()
+                # Update image
+                self.ui.update_image(image_path)
+                self.ui.close_loading()
+                self.ui.lift()
 
 
             elif key == keyboard.Key.pause:
