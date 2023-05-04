@@ -39,8 +39,8 @@ class NoteWindow(customtkinter.CTkToplevel):
             # self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
 
     def write_word_to_file(self, word):
-        with open("./data/notes.txt", "a", encoding="utf-8") as f:
-            f.write(f"{word}\n")
+        with open("./data/notes.txt", "ab") as f:
+            f.write(word)
         
         button = self.text2button[word]
         button.configure(state="disabled")

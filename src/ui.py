@@ -40,8 +40,12 @@ class AppUI(customtkinter.CTk):
         # Adding File Menu and commands
         file = tk.Menu(menubar, tearoff = 0)
         menubar.add_cascade(label ='File', menu = file)
+        # Add open word list
         file.add_command(label ='Open word list', command = self.open_wordlist, font=('Arial', 20))
-
+        # Add open notebook
+        file.add_command(label ='Open notebook', 
+                         command = lambda : os.startfile(f"{os.path.dirname(os.path.realpath(__file__))}/../data/notes.txt"), 
+                         font=('Arial', 20))
         self.config(menu = menubar)
     
     def open_wordlist(self):
