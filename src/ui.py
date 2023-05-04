@@ -5,6 +5,7 @@ import os
 from PIL import Image
 
 from .widget import NoteWindow, LoadingWindow
+from .utils import get_words_from_result
 
 
 class AppUI(customtkinter.CTk):
@@ -18,7 +19,10 @@ class AppUI(customtkinter.CTk):
 
         # create menu
         self.create_menu()
-        self.note_window = None
+        self.wordlist_window = None
+        self.word_list = []
+        self.word_trans_list = []
+
         self.loading_window = None
 
         # create main part
@@ -32,17 +36,18 @@ class AppUI(customtkinter.CTk):
         # Adding File Menu and commands
         file = tk.Menu(menubar, tearoff = 0)
         menubar.add_cascade(label ='File', menu = file)
-        file.add_command(label ='Open note', command = self.open_notebook, font=('Arial', 20))
+        file.add_command(label ='Open word list', command = self.open_wordlist, font=('Arial', 20))
 
         self.config(menu = menubar)
     
-    def open_notebook(self):
-        if self.note_window is None or (not self.note_window.winfo_exists()):
-            self.note_window = NoteWindow(self)  # create window if its None or destroyed
-            self.note_window.after(10, self.note_window.lift)
+    def open_wordlist(self):
+        if self.wordlist_window is None or (not self.wordlist_window.winfo_exists()):
+            self.wordlist_window = NoteWindow(self)  # create window if its None or destroyed
+            self.wordlist_window.build_word_list(self.word_list)
+            self.wordlist_window.after(10, self.wordlist_window.lift)
             print("creating new window")
         else:
-            self.note_window.focus()  # if window exists focus it
+            self.wordlist_window.focus()  # if window exists focus it
     
     def open_loading(self):
         """
@@ -89,9 +94,16 @@ class AppUI(customtkinter.CTk):
     
         self.main_image_label.configure(image = new_image)
         
-
+    ################################### functions ###################################
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
+
+    def update_word_list(self, result):
+        """
+        update word list from ocr result
+        """
+        self.word_list = get_words_from_result(result)
+        print("!!!!!!!!!!!!word_list!!!!!!!!!!", self.word_list)
 
 
 if __name__ == "__main__":

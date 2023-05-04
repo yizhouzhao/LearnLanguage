@@ -1,7 +1,7 @@
 import customtkinter
 from PIL import Image
 
-from .animate_gif import AnimatedGif
+from .translate import translate
 
 class NoteWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -9,23 +9,48 @@ class NoteWindow(customtkinter.CTkToplevel):
         self.geometry("240x300")
         self.title("Wold list")
 
+        self.word_list = []
+        self.word_translate_list = []
+
         # self.label = customtkinter.CTkLabel(self, text="Word list")
         # self.label.pack()
 
         self.frame = customtkinter.CTkScrollableFrame(master=self)
         self.frame.pack(fill="both", expand=True)
 
-        self.build_block("Word 1", "Translation 1", 0)
-        self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
+    def build_word_list(self, word_list:list):
+        if len(word_list) > 0:
+            self.word_list = word_list
+
+            # # translate if needed
+            # if len(self.word_translate_list == 0):
+            #     word_all = "\n".join(word_list)
+            #     self.translate_word_list = translate(word_all).split("\n")
+
+            for idx, word in enumerate(word_list):
+                self.build_block(word, "translate", idx)
+
+            self.build_block("Word 1", "Translation 1", 0)
+            self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
         
     def build_block(self, word:str, translation:str, index:int):
         block = customtkinter.CTkFrame(master=self.frame, corner_radius=10, fg_color="transparent") #  
-        button = customtkinter.CTkButton(master=block, width = 20, text= "D", command=None)
-        button.grid(row = 0, column = 0, padx=5, sticky="w")
         word_label = customtkinter.CTkLabel(block, text=word)
-        word_label.grid(row = 0, column = 1, padx=5)
+        word_label.grid(row = 0, column = 0, padx=5, sticky="w")
+
         translation_label = customtkinter.CTkLabel(block, text=translation)
-        translation_label.grid(row = 0, column = 2, padx=5, sticky="e")
+        translation_label.grid(row = 0, column = 1, padx=5)
+
+        read_button = customtkinter.CTkButton(master=block, width = 20, text= "R", fg_color="#714285",
+                                         command=None)
+        read_button.grid(row = 0, column = 2, padx=2, sticky="e")
+        lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "L", fg_color="#3428AA",
+                                         command=None)
+        lookup_button.grid(row = 0, column = 3, padx=2, sticky="e")
+
+        add_button = customtkinter.CTkButton(master=block, width = 20, text= "A", fg_color="#AA8822",
+                                         command=None)
+        add_button.grid(row = 0, column = 4, padx=2, sticky="e")
         
         block.grid(sticky = "nw", pady = 3)
 

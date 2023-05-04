@@ -44,7 +44,13 @@ class LearnApp:
 
                 # Perform OCR
                 result = self.learner.perform_ocr()
+                # update ui word list
+                self.ui.update_word_list(result)
+
+                # Perform translation and draw
                 image, image_path = self.learner.draw_ocr(result)
+
+                
 
                 # Update image
                 self.ui.update_image(image_path)

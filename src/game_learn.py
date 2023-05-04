@@ -1,7 +1,7 @@
 # main class for game translator
 from pynput import keyboard
 from paddleocr import PaddleOCR
-import mtranslate
+from .translate import *
 
 from .utils import *
 import string
@@ -23,12 +23,12 @@ class Learner():
 
         self.ocr = PaddleOCR(use_angle_cls=True, lang=self.source_lang) # need to run only once to download and load model into memory
         if source_lang == "french":
-            self.source_lang_code = "fr"
+            Learner.source_lang_code = "fr"
         elif source_lang == "japan":
-            self.source_lang_code = "ja"
+            Learner.source_lang_code = "ja"
         else:
-            self.source_lang_code = "en"    
-        self.target_lang_code = "zh-CN" if target_lang == "chinese" else "en"
+            Learner.source_lang_code = "en"    
+        Learner.target_lang_code = "zh-CN" if target_lang == "chinese" else "en"
 
         print("init complete:", self.image_path)
 
@@ -47,7 +47,7 @@ class Learner():
     def perform_translation(self, txts):
         print("....performing translation....")
         text = "\n".join(txts)
-        translation = mtranslate.translate(text, self.target_lang_code, self.source_lang_code)
+        translation = translate(text, Learner.target_lang_code, Learner.source_lang_code)
         print("....end translation....")
         translated_texts = translation.split("\n")
         return translated_texts
@@ -59,12 +59,14 @@ class Learner():
         result = result[0]
         image = Image.open(self.image_path).convert('RGB')
         boxes = [line[0] for line in result]
+        scores = [line[1][1] for line in result]
         txts = [line[1][0] for line in result]
         if need_translation:
-            txts = self.perform_translation(txts)
+            txt_translations = self.perform_translation(txts)
+        else:
+            txt_translations = txts
 
-        scores = [line[1][1] for line in result]
-        image_draw = draw_ocr_boxes(image, boxes, txts, scores,
+        image_draw = draw_ocr_boxes(image, boxes, txt_translations, scores,
                                     font_path=self.font_path)
         # image_draw.show()
         if need_save:

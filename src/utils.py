@@ -2,6 +2,7 @@ from PIL import ImageGrab, Image, ImageFont, ImageDraw
 import numpy as np
 import math
 import cv2
+import re
 
 def get_screen_size():
     """
@@ -75,12 +76,24 @@ def draw_ocr_boxes(image,
             text = txts[i]
 
             org = (box[1][0] + 10, box[0][1] + box_height // 2 - 20)
-            print("org:", org, "text:", text)
+            # print("org:", org, "text:", text)
             d.text(org, text, font=fnt, fill=(200, 10, 80, 255))
 
         # txt_image.show()
         base = Image.alpha_composite(base, txt_image)
 
     return base
+
+def get_words_from_result(result):
+    """
+    Get words from results
+    """
+    txts = [line[1][0] for line in result[0]]
+    print("txts", txts)
+    line = " ".join(txts)
+    line = re.sub(r"[^A-Za-z]", " ", line.strip())
+    words = line.split()
+    words = [word.lower() for word in words]
+    return words
 
 
