@@ -47,26 +47,32 @@ class NoteWindow(customtkinter.CTkToplevel):
         
     def build_block(self, word:str, translation:str, index:int):
         block = customtkinter.CTkFrame(master=self.frame, corner_radius=10, fg_color="transparent") #  
+        
+        read_button = customtkinter.CTkButton(master=block, width = 20, text= " ", fg_color="#4aad34",
+                                         command=lambda word = word: self.master.say_sentence(word)
+        )
+        read_button.grid(row = 0, column = 0, padx=2, sticky="w")
+        
         word_label = customtkinter.CTkLabel(block, text=word)
-        word_label.grid(row = 0, column = 0, padx=5, sticky="w")
+        word_label.grid(row = 0, column = 1, padx=5, sticky="w")
 
         translation_label = customtkinter.CTkLabel(block, text=translation)
-        translation_label.grid(row = 0, column = 1, padx=5)
+        translation_label.grid(row = 0, column = 2, padx=5)
 
         write_line = (word + " " + translation + "\n").encode('utf8')
-        read_button = customtkinter.CTkButton(master=block, width = 20, text= "+", fg_color="#714285",
+        write_button = customtkinter.CTkButton(master=block, width = 20, text= "+", fg_color="#714285",
                                          command=lambda : self.write_word_to_file(write_line)
         )
-        self.text2button[write_line] = read_button
+        self.text2button[write_line] = write_button
 
-        read_button.grid(row = 0, column = 2, padx=2, sticky="e")
+        write_button.grid(row = 0, column = 3, padx=2, sticky="e")
         lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "Collins", fg_color="#328afc",
                                          command=lambda : webbrowser.open(f'https://www.collinsdictionary.com/dictionary/{Learner.source_lang}-english/{word}'))
-        lookup_button.grid(row = 0, column = 3, padx=2, sticky="e")
+        lookup_button.grid(row = 0, column = 4, padx=2, sticky="e")
 
         add_button = customtkinter.CTkButton(master=block, width = 20, text= "Yaodao", fg_color="#991567",
                                          command=lambda : webbrowser.open(f'https://www.youdao.com/result?word={word}&lang={Learner.source_lang_code}'))
-        add_button.grid(row = 0, column = 4, padx=2, sticky="e")
+        add_button.grid(row = 0, column = 5, padx=2, sticky="e")
         
         block.grid(sticky = "nw", pady = 3)
 

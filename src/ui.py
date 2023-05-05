@@ -3,6 +3,8 @@ import customtkinter
 import os
 from PIL import Image
 
+import asyncio
+import threading
 import pyttsx3
 
 from .widget import NoteWindow, LoadingWindow
@@ -80,7 +82,7 @@ class AppUI(customtkinter.CTk):
             self.loading_window.destroy()
             self.loading_window = None
     
-    def open_image(self, image_path:str = "./src/ui_image/loading.jpg"):
+    def open_image(self, image_path:str = "./src/ui_image/francais.PNG"):
         
         # self.grid_rowconfigure(0, weight=1)
         # self.grid_columnconfigure(0, weight=1)
@@ -135,7 +137,7 @@ class AppUI(customtkinter.CTk):
             read_button = customtkinter.CTkButton(master=self.home_frame, width = 8, height = 8, text= ' ', # txts[i]
                                             command=lambda i = i: self.say_sentence(txts[i]), # txts[i]
                                             font = ("Times", 8),
-                                            # fg_color="transparent",
+                                            fg_color="#4aad34",
                                             # bg_color="transparent",
                                             )
             # print(i, "box", box, box[0][0] * scaler_x, box[0][1] * scaler_y)
@@ -169,14 +171,28 @@ class AppUI(customtkinter.CTk):
             if lang_code in voice.id.lower():
                 self.engine.setProperty('voice', voice.id)
                 break
+        
+        self.is_reading = False
 
     def say_sentence(self, sentence):
         """
         Say sentence
         """
-        print("saying sentence: ", sentence)
-        self.engine.say(sentence)
-        self.engine.runAndWait()
+        # print("saying sentence: ", sentence)
+        # self.engine.say(sentence)
+        # self.engine.runAndWait()
+
+        def read_word(word):
+            if not self.is_reading:
+                self.is_reading = True
+                self.engine.say(word)
+                self.engine.runAndWait()
+                self.is_reading = False
+
+        # Create a new thread to read the word
+        thread = threading.Thread(target=read_word, args=(sentence,))
+        thread.start()
+        # thread.join()
 
 
 if __name__ == "__main__":

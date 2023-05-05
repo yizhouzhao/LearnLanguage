@@ -23,7 +23,7 @@ class Learner():
         self.source_lang = source_lang
         self.font_size = font_size
 
-        self.ocr = PaddleOCR(use_angle_cls=True, lang=self.source_lang) # need to run only once to download and load model into memory
+        self.ocr = PaddleOCR(use_angle_cls=False, use_fp16=True, lang=self.source_lang) # need to run only once to download and load model into memory
         if source_lang == "french":
             Learner.source_lang_code = "fr"
         elif source_lang == "japan":
