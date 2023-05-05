@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 /src/test_images
+/image_local
