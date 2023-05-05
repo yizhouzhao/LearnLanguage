@@ -38,6 +38,7 @@ class NoteWindow(customtkinter.CTkToplevel):
             # self.build_block("Word 1", "Translation 1", 0)
             # self.build_block("Worsdffdsfsd 1", "Tran 1", 0)
 
+
     def write_word_to_file(self, word):
         with open("./data/notes.txt", "ab") as f:
             f.write(word)

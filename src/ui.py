@@ -54,14 +54,17 @@ class AppUI(customtkinter.CTk):
         if self.wordlist_window is None or (not self.wordlist_window.winfo_exists()):
             self.wordlist_window = NoteWindow(self)  # create window if its None or destroyed
             # build word list
-            self.open_loading()
             self.wordlist_window.build_word_list(self.word_list)
-            self.close_loading()
 
             self.wordlist_window.after(10, self.wordlist_window.lift)
             print("creating new window")
         else:
             self.wordlist_window.focus()  # if window exists focus it
+    
+    def close_word_list(self):
+        if self.wordlist_window is not None and self.wordlist_window.winfo_exists():
+            self.wordlist_window.destroy()
+            self.wordlist_window = None
     
     def open_loading(self):
         """
@@ -131,10 +134,10 @@ class AppUI(customtkinter.CTk):
         # scaler_x = self.winfo_screenwidth() / self.main_image_size[0] * 0.9
         # scaler_y = self.winfo_screenheight() / self.main_image_size[1] * 0.9
         # print("scaler", scaler_x, scaler_y, self.main_image_size)
-
+        
         for i in range(len(boxes)):
             box = boxes[i]
-            read_button = customtkinter.CTkButton(master=self.home_frame, width = 8, height = 8, text= ' ', # txts[i]
+            sound_button = customtkinter.CTkButton(master=self.home_frame, width = 8, height = 8, text= ' ', # txts[i]
                                             command=lambda i = i: self.say_sentence(txts[i]), # txts[i]
                                             font = ("Times", 8),
                                             fg_color="#4aad34",
@@ -142,11 +145,18 @@ class AppUI(customtkinter.CTk):
                                             )
             # print(i, "box", box, box[0][0] * scaler_x, box[0][1] * scaler_y)
             # read_button.place(x = box[0][0] * scaler_x, y=box[0][1] * scaler_y, anchor="nw")
-            read_button.place(relx=box[0][0] / self.main_image_size[0] - 0.01, 
+            sound_button.place(relx=box[0][0] / self.main_image_size[0] - 0.01, 
                               rely=box[0][1] / self.main_image_size[1], 
                               anchor="nw")
             # read_button.attributes("-alpha", 0.5)
             # read_button.attributes("-topmost", True)
+            self.sound_buttons.append(sound_button)
+    
+    def delete_sound_buttons(self):
+        for button in self.sound_buttons:
+            button.destroy()
+        
+        self.sound_buttons.clear()
             
 
     ################################### ui functions ###################################
@@ -159,6 +169,10 @@ class AppUI(customtkinter.CTk):
         """
         self.word_list = get_words_from_result(result)
         # print("!!!!!!!!!!!!word_list!!!!!!!!!!", self.word_list)
+
+    def reset_ui(self):
+        self.close_word_list()
+        self.delete_sound_buttons()
 
     ################################### reading engine ###################################
     def init_reading_engine(self):
@@ -173,6 +187,7 @@ class AppUI(customtkinter.CTk):
                 break
         
         self.is_reading = False
+        self.sound_buttons = []
 
     def say_sentence(self, sentence):
         """

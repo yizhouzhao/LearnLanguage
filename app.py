@@ -38,10 +38,14 @@ class LearnApp:
             if key == keyboard.Key.print_screen:
                 self.is_loading = True
                 
+                # reset ui
+                self.ui.reset_ui()
+
                 # Capture a screenshot
                 self.learner.get_screenshot()
                 self.ui.update_image(self.learner.image_path)
                 self.ui.open_loading()
+                
 
 
                 # Perform OCR
