@@ -2,6 +2,12 @@
 
 Magic Screenshot Dictionary is a Python-based desktop application that can extract sentences and words from a screenshot and provide their meanings and pronunciations. It also includes a word list and a notebook to keep track of your learned words.
 
+# Enjoy this work? Buy me a coffee!
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/yizhouzhao)
+
+
+
 # Usage
 To start using Magic Dictionary, follow these steps:
 
