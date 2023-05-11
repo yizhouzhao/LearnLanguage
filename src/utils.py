@@ -91,7 +91,7 @@ def get_words_from_result(result, filter_length = 3, sort_word = True):
     txts = [line[1][0] for line in result[0]]
     print("txts", txts)
     line = " ".join(txts)
-    line = re.sub(r"[^A-Za-z]", " ", line.strip())
+    line = re.sub(r"[^-/().&' \w]|_", " ", line.strip()) # [^A-Za-z]
     words = line.split()
     words = set([word.lower() for word in words])
     words = [word for word in words if len(word) >= filter_length]

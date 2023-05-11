@@ -10,8 +10,8 @@ class LearnApp:
 
         # start learner
         self.learner = Learner(
-            source_lang="french",
-            target_lang="chinese"
+            source_lang="ch",
+            target_lang="english"
         )
 
         # add listener

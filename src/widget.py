@@ -67,13 +67,19 @@ class NoteWindow(customtkinter.CTkToplevel):
         self.text2button[write_line] = write_button
 
         write_button.grid(row = 0, column = 3, padx=2, sticky="e")
-        lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "Collins", fg_color="#328afc",
+        lookup_button = customtkinter.CTkButton(master=block, width = 20, text= "Col", fg_color="#328afc",
                                          command=lambda : webbrowser.open(f'https://www.collinsdictionary.com/dictionary/{Learner.source_lang}-english/{word}'))
         lookup_button.grid(row = 0, column = 4, padx=2, sticky="e")
 
-        add_button = customtkinter.CTkButton(master=block, width = 20, text= "Yaodao", fg_color="#991567",
+        lookup_button2 = customtkinter.CTkButton(master=block, width = 20, text= "Yao", fg_color="#991567",
                                          command=lambda : webbrowser.open(f'https://www.youdao.com/result?word={word}&lang={Learner.source_lang_code}'))
-        add_button.grid(row = 0, column = 5, padx=2, sticky="e")
+        lookup_button2.grid(row = 0, column = 5, padx=2, sticky="e")
+        
+        if Learner.source_lang_code == "fr":
+            lookup_button3 = customtkinter.CTkButton(master=block, width = 20, text= "Fr", fg_color="#34BB67",
+                                            command=lambda : webbrowser.open(f'https://www.frdic.com/dicts/fr/{word}'))
+            lookup_button3.grid(row = 0, column = 6, padx=2, sticky="e")
+        
         
         block.grid(sticky = "nw", pady = 3)
 
